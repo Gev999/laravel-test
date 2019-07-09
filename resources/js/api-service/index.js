@@ -44,22 +44,46 @@ class ApiService
     }
 
     async createCompany(company) {
-        const { name, email, website } = company;
-        return await axios.post(`${this.companiesURL}`, 
-            {
-                token: localStorage.getItem('token'),
-                name, email, website, 
-                header: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            })
+        const { name, email, website, logo} = company;
+
+        const formData = new FormData();
+        formData.set('name', name ? name : '');
+        formData.set('email', email ? email : '');
+        formData.set('website', website? website : '');
+        formData.append('logo', logo ? logo : '');
+
+        return await axios({
+            method: 'POST',
+            url: `${this.companiesURL}`,
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': "Bearer " + localStorage.getItem('token'),
+            },
+            data: formData,
+        })
     }
 
     async updateCompany(company) {
-        const { id, name, email, website } = company;
-        return await axios.put(`${this.companiesURL}/${id}`, {
-            token: localStorage.getItem('token'),
-            id, name, email, website,
+        const { id, name, email, website, logo } = company;
+
+        const formData = new FormData();
+        formData.set('id', id ? id : '');
+        formData.set('name', name ? name : '');
+        formData.set('email', email ? email : '');
+        formData.set('website', website? website : '');
+        if (typeof logo==='object') {
+            formData.append('logo', logo ? logo : '');
+        }
+        formData.append('_method', 'PUT');
+
+        return await axios({
+            method: 'POST',
+            url: `${this.companiesURL}/${id}`,
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': "Bearer " + localStorage.getItem('token'),
+            },
+            data: formData,
         })
     }
 

@@ -1,18 +1,21 @@
 import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
 import './login.css';
 
 export default class Login extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             email: '',
             password: '',
             error: false,
-            userToken: localStorage.getItem('token')
         }
         this.isLoggedIn = this.isLoggedIn.bind(this);
         this.onChangeHandle = this.onChangeHandle.bind(this);
+    }
+    componentWillMount() {
+        if (localStorage.getItem('token')) {
+            this.props.history.push('/');
+        }
     }
 
     isLoggedIn(e) {
@@ -24,9 +27,7 @@ export default class Login extends Component {
         })
         .then(res => {
             localStorage.setItem('token', res.data.access_token);
-            this.setState({
-                userToken: res.data.access_token,
-            })
+            this.props.history.push('/');
         })
         .catch(err => {
             this.setState({ error: true})
@@ -40,10 +41,7 @@ export default class Login extends Component {
     }
 
     render() {
-        const { email, password, error, userToken } = this.state;
-        if (userToken) {
-            return <Redirect to='/' />
-        }
+        const { email, password, error } = this.state;
         const clazz = error? "form-control err-field" : "form-control";
         return (
             <div className="container mt-5">

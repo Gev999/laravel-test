@@ -17,6 +17,7 @@ class CompanyCreateOrEdit extends Component
                 website: null,
             },
             isEdit: false,
+            imgSrc: '',
             errors: {
                 error: null,
                 name: null,
@@ -40,6 +41,15 @@ class CompanyCreateOrEdit extends Component
                     company: response,
                     isEdit: true,
                 });
+            })
+            .then(()=>{
+                const val = this.state.company.logo ?
+                    `/storage/logos/${this.state.company.logo}` : this.state.isEdit ? '/storage/logos/default.png' : '';
+                if (val) {
+                    this.setState({
+                        imgSrc: val,
+                    })
+                }
             })
             .catch(error=>{
                 this.setState({
@@ -66,16 +76,19 @@ class CompanyCreateOrEdit extends Component
     }
 
     onImageChangeHandle(e) {
+        this.setState({
+            company: {
+                ...this.state.company,
+                logo: e.target.files[0],
+            }
+        })
         let files = e.target.files || e.dataTransfer.files;
         if (!files.length)
             return;
         let reader = new FileReader();
         reader.onload = (e) => {
             this.setState({
-                company: {
-                    ...this.state.company,
-                    logo: e.target.result,
-                }
+                imgSrc: e.target.result,
             })
         };
         reader.readAsDataURL(files[0]);
@@ -84,7 +97,6 @@ class CompanyCreateOrEdit extends Component
     formHandle(e) {
         e.preventDefault();
         const { company, isEdit } = this.state;
-        console.log(company.logo)
         const handle = isEdit ? this.apiService.updateCompany : this.apiService.createCompany;
         handle(company)
         .then(response=>{
@@ -103,9 +115,9 @@ class CompanyCreateOrEdit extends Component
         if (errors.error) {
             return <ErrorBoundary error={ errors.error } />
         }
-        const nameErr = errors.name ? 'err-field' : undefined;
-        const emailErr = errors.email ? 'err-field' : undefined;
-        const logoErr = errors.logo ? 'err-field' : undefined;
+        const nameErr = errors.name ? 'err-field' : '';
+        const emailErr = errors.email ? 'err-field' : '';
+        const logoErr = errors.logo ? 'err-field' : '';
         return (
             <React.Fragment>
                 <Header />
@@ -113,10 +125,16 @@ class CompanyCreateOrEdit extends Component
                     <form className="form-container" encType="multipart/form-data" onSubmit={ this.formHandle }>
                         <div className="form-group">
                             <label htmlFor="logo">Logo: </label>
-                            <img src={company.logo? company.logo: '#'} style={{width: '70px'}} className="ml-2 mb-2"/>
+                            <img src={`${this.state.imgSrc}`} style={{width: '70px'}} className="ml-2 mb-2"/>
                             <br />
                             <input type='file' id="logo" name="logo" accept="image/*" onChange={this.onImageChangeHandle}/>
                         </div>
+                        { logoErr && 
+                            <div className="form-group">
+                                <p className="err-msg">{ errors.logo}</p>
+                            </div>
+                        }
+
                         <div className="form-group">
                             <label htmlFor="name">Company name: </label>
                             <input className={`form-control ${nameErr}`} id="name" name="name" type="text"

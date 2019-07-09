@@ -66773,6 +66773,8 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
@@ -66841,27 +66843,32 @@ function () {
       var _createCompany = _asyncToGenerator(
       /*#__PURE__*/
       _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(company) {
-        var name, email, website;
+        var name, email, website, logo, formData;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                name = company.name, email = company.email, website = company.website;
-                _context.next = 3;
-                return axios__WEBPACK_IMPORTED_MODULE_1___default.a.post("".concat(this.companiesURL), {
-                  token: localStorage.getItem('token'),
-                  name: name,
-                  email: email,
-                  website: website,
-                  header: {
-                    'Content-Type': 'multipart/form-data'
-                  }
+                name = company.name, email = company.email, website = company.website, logo = company.logo;
+                formData = new FormData();
+                formData.set('name', name ? name : '');
+                formData.set('email', email ? email : '');
+                formData.set('website', website ? website : '');
+                formData.append('logo', logo ? logo : '');
+                _context.next = 8;
+                return axios__WEBPACK_IMPORTED_MODULE_1___default()({
+                  method: 'POST',
+                  url: "".concat(this.companiesURL),
+                  headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': "Bearer " + localStorage.getItem('token')
+                  },
+                  data: formData
                 });
 
-              case 3:
+              case 8:
                 return _context.abrupt("return", _context.sent);
 
-              case 4:
+              case 9:
               case "end":
                 return _context.stop();
             }
@@ -66881,25 +66888,38 @@ function () {
       var _updateCompany = _asyncToGenerator(
       /*#__PURE__*/
       _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(company) {
-        var id, name, email, website;
+        var id, name, email, website, logo, formData;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                id = company.id, name = company.name, email = company.email, website = company.website;
-                _context2.next = 3;
-                return axios__WEBPACK_IMPORTED_MODULE_1___default.a.put("".concat(this.companiesURL, "/").concat(id), {
-                  token: localStorage.getItem('token'),
-                  id: id,
-                  name: name,
-                  email: email,
-                  website: website
+                id = company.id, name = company.name, email = company.email, website = company.website, logo = company.logo;
+                formData = new FormData();
+                formData.set('id', id ? id : '');
+                formData.set('name', name ? name : '');
+                formData.set('email', email ? email : '');
+                formData.set('website', website ? website : '');
+
+                if (_typeof(logo) === 'object') {
+                  formData.append('logo', logo ? logo : '');
+                }
+
+                formData.append('_method', 'PUT');
+                _context2.next = 10;
+                return axios__WEBPACK_IMPORTED_MODULE_1___default()({
+                  method: 'POST',
+                  url: "".concat(this.companiesURL, "/").concat(id),
+                  headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': "Bearer " + localStorage.getItem('token')
+                  },
+                  data: formData
                 });
 
-              case 3:
+              case 10:
                 return _context2.abrupt("return", _context2.sent);
 
-              case 4:
+              case 11:
               case "end":
                 return _context2.stop();
             }
@@ -67543,10 +67563,11 @@ function (_Component) {
         width: '50px'
       };
       return companies.map(function (company) {
+        var imgSrc = company.logo ? company.logo : 'default.png';
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", {
           key: company.id
         }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
-          src: "/storage/logos/default.png",
+          src: "/storage/logos/".concat(imgSrc),
           style: imgStyle
         })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, company.name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, company.email), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, company.website), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
           to: "/companies/".concat(company.id)
@@ -67674,7 +67695,13 @@ function (_Component) {
     key: "getCompanyRow",
     value: function getCompanyRow() {
       var company = this.state.company;
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, "Logo"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, company.name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, company.email), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, company.website));
+      var imgSrc = company.logo ? company.logo : 'default.png';
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
+        src: "/storage/logos/".concat(imgSrc),
+        style: {
+          width: '50px'
+        }
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, company.name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, company.email), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, company.website));
     }
   }, {
     key: "render",
@@ -67772,6 +67799,7 @@ function (_Component) {
         website: null
       },
       isEdit: false,
+      imgSrc: '',
       errors: {
         error: null,
         name: null,
@@ -67799,6 +67827,14 @@ function (_Component) {
             company: response,
             isEdit: true
           });
+        }).then(function () {
+          var val = _this2.state.company.logo ? "/storage/logos/".concat(_this2.state.company.logo) : _this2.state.isEdit ? '/storage/logos/default.png' : '';
+
+          if (val) {
+            _this2.setState({
+              imgSrc: val
+            });
+          }
         })["catch"](function (error) {
           _this2.setState({
             errors: _objectSpread({}, _this2.state.errors, {
@@ -67821,15 +67857,18 @@ function (_Component) {
     value: function onImageChangeHandle(e) {
       var _this3 = this;
 
+      this.setState({
+        company: _objectSpread({}, this.state.company, {
+          logo: e.target.files[0]
+        })
+      });
       var files = e.target.files || e.dataTransfer.files;
       if (!files.length) return;
       var reader = new FileReader();
 
       reader.onload = function (e) {
         _this3.setState({
-          company: _objectSpread({}, _this3.state.company, {
-            logo: e.target.result
-          })
+          imgSrc: e.target.result
         });
       };
 
@@ -67844,7 +67883,6 @@ function (_Component) {
       var _this$state = this.state,
           company = _this$state.company,
           isEdit = _this$state.isEdit;
-      console.log(company.logo);
       var handle = isEdit ? this.apiService.updateCompany : this.apiService.createCompany;
       handle(company).then(function (response) {
         _this4.props.history.push('/companies');
@@ -67868,9 +67906,9 @@ function (_Component) {
         });
       }
 
-      var nameErr = errors.name ? 'err-field' : undefined;
-      var emailErr = errors.email ? 'err-field' : undefined;
-      var logoErr = errors.logo ? 'err-field' : undefined;
+      var nameErr = errors.name ? 'err-field' : '';
+      var emailErr = errors.email ? 'err-field' : '';
+      var logoErr = errors.logo ? 'err-field' : '';
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_app_header__WEBPACK_IMPORTED_MODULE_2__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "container mt-5"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
@@ -67882,7 +67920,7 @@ function (_Component) {
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
         htmlFor: "logo"
       }, "Logo: "), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
-        src: company.logo ? company.logo : '#',
+        src: "".concat(this.state.imgSrc),
         style: {
           width: '70px'
         },
@@ -67893,7 +67931,11 @@ function (_Component) {
         name: "logo",
         accept: "image/*",
         onChange: this.onImageChangeHandle
-      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      })), logoErr && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "form-group"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+        className: "err-msg"
+      }, errors.logo)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "form-group"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
         htmlFor: "name"
@@ -68042,7 +68084,6 @@ function (_Component) {
       },
       companies: [],
       isEdit: false,
-      selectValue: '',
       errors: {
         error: null,
         first_name: null,
@@ -68718,9 +68759,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Login; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
-/* harmony import */ var _login_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./login.css */ "./resources/js/components/login/login.css");
-/* harmony import */ var _login_css__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_login_css__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _login_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./login.css */ "./resources/js/components/login/login.css");
+/* harmony import */ var _login_css__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_login_css__WEBPACK_IMPORTED_MODULE_1__);
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -68744,23 +68784,21 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
-
 var Login =
 /*#__PURE__*/
 function (_Component) {
   _inherits(Login, _Component);
 
-  function Login() {
+  function Login(props) {
     var _this;
 
     _classCallCheck(this, Login);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(Login).call(this));
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(Login).call(this, props));
     _this.state = {
       email: '',
       password: '',
-      error: false,
-      userToken: localStorage.getItem('token')
+      error: false
     };
     _this.isLoggedIn = _this.isLoggedIn.bind(_assertThisInitialized(_this));
     _this.onChangeHandle = _this.onChangeHandle.bind(_assertThisInitialized(_this));
@@ -68768,6 +68806,13 @@ function (_Component) {
   }
 
   _createClass(Login, [{
+    key: "componentWillMount",
+    value: function componentWillMount() {
+      if (localStorage.getItem('token')) {
+        this.props.history.push('/');
+      }
+    }
+  }, {
     key: "isLoggedIn",
     value: function isLoggedIn(e) {
       var _this2 = this;
@@ -68782,9 +68827,7 @@ function (_Component) {
       }).then(function (res) {
         localStorage.setItem('token', res.data.access_token);
 
-        _this2.setState({
-          userToken: res.data.access_token
-        });
+        _this2.props.history.push('/');
       })["catch"](function (err) {
         _this2.setState({
           error: true
@@ -68802,15 +68845,7 @@ function (_Component) {
       var _this$state2 = this.state,
           email = _this$state2.email,
           password = _this$state2.password,
-          error = _this$state2.error,
-          userToken = _this$state2.userToken;
-
-      if (userToken) {
-        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Redirect"], {
-          to: "/"
-        });
-      }
-
+          error = _this$state2.error;
       var clazz = error ? "form-control err-field" : "form-control";
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "container mt-5"

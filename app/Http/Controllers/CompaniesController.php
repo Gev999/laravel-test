@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Company;
 use App\Http\Requests\CheckCompanyData;
 use App\Http\Services\CompaniesService;
+use Illuminate\Support\Facades\Storage;
 
 class CompaniesController extends Controller
 {
@@ -34,28 +35,47 @@ class CompaniesController extends Controller
         ], 404);
     }
 
-    public function delete2($id) {
+    public function destroy2($id) {
         $company = Company::find($id);
+        if ($company->logo) {
+            Storage::delete('public/logos/'.$company->logo);
+        }
         $company->delete();
         return response()->json('Company deleted succesfully');
     }
 
     public function store2(CheckCompanyData $request) {
         $company = new Company;
-        $company->name = $request->input('name');
-        $company->email = $request->input('email');
-        $company->website = $request->input('website');
-        $company->save();
-        return response()->json('All ok');
+        self::addData($company, $request);
+        return response()->json('Company added succesfully');
     }
 
     public function update2(CheckCompanyData $request, $id) {
         $company = Company::find($id);
+        self::addData($company, $request, true);
+        return response()->json('Company updated succesfully');
+    }
+
+    private static function addData($company, $request, $isUpdate = false)
+    {
+        if ($request->logo) {
+            $fileNameWithExt = $request->logo->getClientOriginalName();
+            $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
+            $extension = $request->logo->getClientOriginalExtension();
+            $fileNameToStore = $fileName.'_'.time().'.'.$extension;
+            $path = $request->logo->storeAs('public/logos', $fileNameToStore);
+            if ($isUpdate) {
+                if ($company->logo) {
+                    Storage::delete('public/logos/'.$company->logo);
+                }
+            }
+            $company->logo = $fileNameToStore;
+        }
+
         $company->name = $request->input('name');
         $company->email = $request->input('email');
         $company->website = $request->input('website');
-        $company->update();
-        return response()->json('All ok');
+        $company->save();
     }
 
     // ------------------------------------------

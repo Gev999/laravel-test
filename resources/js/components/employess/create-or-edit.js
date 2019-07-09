@@ -19,7 +19,6 @@ class EmployeeCreateOrEdit extends Component
             },
             companies: [],
             isEdit: false,
-            selectValue: '',
             errors: {
                 error: null,
                 first_name: null,

@@ -38,9 +38,10 @@ class Company extends Component {
 
     getCompanyRow() {
         const { company } = this.state;
+        const imgSrc = company.logo ? company.logo : 'default.png'
         return (
             <tr>
-                <td>Logo</td>
+                <td><img src={`/storage/logos/${imgSrc}`} style={{width: '50px'}}/></td>
                 <td>{company.name}</td>
                 <td>{company.email}</td>
                 <td>{company.website}</td>

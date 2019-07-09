@@ -5,7 +5,7 @@ Route::group([
     'middleware' => 'api',
     'prefix' => 'auth'
 
-], function ($router) {
+], function () {
 
     Route::post('login', 'AuthController@login');
     Route::post('logout', 'AuthController@logout');
@@ -22,7 +22,7 @@ Route::group([
 
     Route::get('companies', 'CompaniesController@index2');
     Route::get('companies/{id}', 'CompaniesController@show2');
-    Route::delete('companies/{id}', 'CompaniesController@delete2');
+    Route::delete('companies/{id}', 'CompaniesController@destroy2');
     Route::post('companies', 'CompaniesController@store2');
     Route::put('companies/{id}', 'CompaniesController@update2');
 
