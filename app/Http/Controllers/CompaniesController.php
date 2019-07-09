@@ -18,6 +18,48 @@ class CompaniesController extends Controller
         return CompaniesService::showCompanies();
     }
 
+    // --------------------------------------
+
+    public function index2() {
+        return Company::all()->toJson();
+    }
+
+    public function show2($id) {
+        $company = Company::find($id);
+        if ($company) {
+            return $company->toJson();
+        }
+        return response()->json([
+            'error' => 'Company with such id does not exist',
+        ], 404);
+    }
+
+    public function delete2($id) {
+        $company = Company::find($id);
+        $company->delete();
+        return response()->json('Company deleted succesfully');
+    }
+
+    public function store2(CheckCompanyData $request) {
+        $company = new Company;
+        $company->name = $request->input('name');
+        $company->email = $request->input('email');
+        $company->website = $request->input('website');
+        $company->save();
+        return response()->json('All ok');
+    }
+
+    public function update2(CheckCompanyData $request, $id) {
+        $company = Company::find($id);
+        $company->name = $request->input('name');
+        $company->email = $request->input('email');
+        $company->website = $request->input('website');
+        $company->update();
+        return response()->json('All ok');
+    }
+
+    // ------------------------------------------
+
     /**
      * Show the form for creating a new resource.
      *

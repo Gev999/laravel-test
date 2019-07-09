@@ -1,0 +1,15 @@
+.err-msg {
+    color: red;
+}
+
+.err-field {
+    border-color: red;
+}
+
+.form-block {
+    width: 50%;
+    margin: 0 auto;
+    border: 1px solid gray;
+    border-radius: 15px;
+    padding: 15px;
+}

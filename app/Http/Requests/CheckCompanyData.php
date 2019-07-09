@@ -28,7 +28,7 @@ class CheckCompanyData extends FormRequest
         return [
             'name' => 'required',
             'email' => 'email|nullable|unique:companies,email,'.$this->id,
-            'logo' => 'image|nullable|dimensions:min_width=100,min_height=100',
+            // 'logo' => 'image|nullable|dimensions:min_width=100,min_height=100',
         ];
     }
 }
