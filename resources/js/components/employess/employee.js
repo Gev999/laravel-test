@@ -3,47 +3,48 @@ import Header from '../app-header';
 import ErrorBoundary from '../error-boundary';
 import { withApiService } from '../hoc-helpers';
 
-class Company extends Component {
+class Employee extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            company: null,
+            employee: null,
             error: null,
         }
         this.apiService = this.props.apiService;
 
-        this.getCompany = this.getCompany.bind(this);
-        this.getCompanyRow = this.getCompanyRow.bind(this);
+        this.getEmployee = this.getEmployee.bind(this);
+        this.getEmployeeRow = this.getEmployeeRow.bind(this);
     }
 
     componentWillMount() {
-        this.getCompany();
+        this.getEmployee();
     }
 
-    getCompany() {
+    getEmployee() {
         const { id } = this.props.match.params;
-        this.apiService.getCompany(id)
+        this.apiService.getEmployee(id)
             .then(response => {
                 this.setState({
-                    company: response,
+                    employee: response,
                 })
             })
-            .catch(e=>{
+            .catch(e => {
                 this.setState({
                     error: e.response.data.error,
                 })
             })
     }
 
-    getCompanyRow() {
-        const { company } = this.state;
+    getEmployeeRow() {
+        const { employee } = this.state;
         return (
             <tr>
-                <td>Logo</td>
-                <td>{company.name}</td>
-                <td>{company.email}</td>
-                <td>{company.website}</td>
+                <td>{employee.first_name}</td>
+                <td>{employee.last_name}</td>
+                <td>{employee.company_id}</td>
+                <td>{employee.email}</td>
+                <td>{employee.phone}</td>
             </tr>
         )
     }
@@ -52,7 +53,7 @@ class Company extends Component {
         if (this.state.error) {
             return <ErrorBoundary error={this.state.error} />
         }
-        const row = this.state.company ? this.getCompanyRow() : null;
+        const row = this.state.employee ? this.getEmployeeRow() : null;
         return (
             <React.Fragment>
                 <Header />
@@ -60,10 +61,11 @@ class Company extends Component {
                     <table className="table table-hover table-striped table-border">
                         <thead>
                             <tr>
-                                <td className="td-brand">Logo</td>
-                                <td className="td-brand">Name</td>
+                                <td className="td-brand">First Name</td>
+                                <td className="td-brand">Last Name</td>
+                                <td className="td-brand">Company ID</td>
                                 <td className="td-brand">Email</td>
-                                <td className="td-brand">Website</td>
+                                <td className="td-brand">Phone</td>
                             </tr>
                         </thead>
                         <tbody>
@@ -76,4 +78,4 @@ class Company extends Component {
     }
 }
 
-export default withApiService(Company)
+export default withApiService(Employee)

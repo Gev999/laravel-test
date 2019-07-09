@@ -1,6 +1,6 @@
 import Companies from './companies';
 import Company from './company';
-import CompanyCreateOrEdit from './create-or-update';
+import CompanyCreateOrEdit from './create-or-edit';
 
 export {
     Companies,

@@ -24,16 +24,17 @@ class CompanyCreateOrEdit extends Component
                 logo: null,
             },
         }
+        this.apiService = this.props.apiService;
+
         this.onChangeHandle = this.onChangeHandle.bind(this);
         this.formHandle = this.formHandle.bind(this);
         this.onImageChangeHandle = this.onImageChangeHandle.bind(this);
     }
 
-    componentDidMount() {
+    componentWillMount() {
         const { id } = this.props.match.params;
-        const { apiService } = this.props;
         if (id) {
-            apiService.getCompany(id)
+            this.apiService.getCompany(id)
             .then(response => {
                 this.setState({
                     company: response,
@@ -82,10 +83,9 @@ class CompanyCreateOrEdit extends Component
 
     formHandle(e) {
         e.preventDefault();
-        const { apiService } = this.props;
         const { company, isEdit } = this.state;
         console.log(company.logo)
-        const handle = isEdit ? apiService.updateCompany : apiService.createCompany;
+        const handle = isEdit ? this.apiService.updateCompany : this.apiService.createCompany;
         handle(company)
         .then(response=>{
             this.props.history.push('/companies');
@@ -120,7 +120,7 @@ class CompanyCreateOrEdit extends Component
                         <div className="form-group">
                             <label htmlFor="name">Company name: </label>
                             <input className={`form-control ${nameErr}`} id="name" name="name" type="text"
-                                value={company.name? company.name: ''} onChange={this.onChangeHandle} />
+                                value={company.name? company.name: ''} onChange={this.onChangeHandle} required />
                         </div>
                         { nameErr && 
                             <div className="form-group">

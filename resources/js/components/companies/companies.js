@@ -5,23 +5,23 @@ import Header from '../app-header';
 
 class Companies extends Component {
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             companies: [],
         }
+        this.apiService = this.props.apiService;
         this.getCompanies = this.getCompanies.bind(this);
         this.getCompaniesRows = this.getCompaniesRows.bind(this);
         this.deleteCompany = this.deleteCompany.bind(this);
     }
 
-    componentDidMount() {
+    componentWillMount() {
         this.getCompanies();
     }
 
     getCompanies() {
-        const { apiService } = this.props
-        apiService.getAllCompanies()
+        this.apiService.getAllCompanies()
             .then(response => {
                 this.setState({
                     companies: response,
@@ -31,11 +31,13 @@ class Companies extends Component {
 
     deleteCompany(e) {
         if (confirm('Are you sure?')) {
-            const { apiService } = this.props;
             const id = e.target.value;
-            apiService.deleteCompany(id)
+            this.apiService.deleteCompany(id)
                 .then(res => {
                     this.getCompanies();
+                })
+                .catch(e=>{
+                    console.log(e.response)
                 })
         }
     }

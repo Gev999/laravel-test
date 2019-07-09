@@ -25,6 +25,11 @@ Route::group([
     Route::delete('companies/{id}', 'CompaniesController@delete2');
     Route::post('companies', 'CompaniesController@store2');
     Route::put('companies/{id}', 'CompaniesController@update2');
-    Route::get('test', 'CompaniesController@test');
+
+    Route::get('employees', 'EmployeesController@index2');
+    Route::get('employees/{id}', 'EmployeesController@show2');
+    Route::delete('employees/{id}', 'EmployeesController@destroy2');
+    Route::post('employees', 'EmployeesController@store2');
+    Route::put('employees/{id}', 'EmployeesController@update2');
 });
 
