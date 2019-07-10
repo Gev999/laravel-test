@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Header from '../app-header';
 import ErrorBoundary from '../error-boundary';
 import { withApiService } from '../hoc-helpers';
 
@@ -55,25 +54,22 @@ class Employee extends Component {
         }
         const row = this.state.employee ? this.getEmployeeRow() : null;
         return (
-            <React.Fragment>
-                <Header />
-                <div className="container">
-                    <table className="table table-hover table-striped table-border">
-                        <thead>
-                            <tr>
-                                <td className="td-brand">First Name</td>
-                                <td className="td-brand">Last Name</td>
-                                <td className="td-brand">Company ID</td>
-                                <td className="td-brand">Email</td>
-                                <td className="td-brand">Phone</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {row}
-                        </tbody>
-                    </table>
-                </div>
-            </React.Fragment>
+            <div className="container">
+                <table className="table table-hover table-striped table-border">
+                    <thead>
+                        <tr>
+                            <td className="td-brand">First Name</td>
+                            <td className="td-brand">Last Name</td>
+                            <td className="td-brand">Company ID</td>
+                            <td className="td-brand">Email</td>
+                            <td className="td-brand">Phone</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {row}
+                    </tbody>
+                </table>
+            </div>
         )
     }
 }

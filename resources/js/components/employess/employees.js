@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { withApiService } from '../hoc-helpers';
-import Header from '../app-header';
 
 class Employees extends Component {
 
@@ -27,7 +26,7 @@ class Employees extends Component {
                     employees: response,
                 })
             })
-            .catch(e=>{
+            .catch(e => {
                 console.log(e.response)
             })
     }
@@ -69,27 +68,24 @@ class Employees extends Component {
         const { employees } = this.state;
         const view = employees.length === 0 ? null : this.getEmployeesRows();
         return (
-            <React.Fragment>
-                <Header />
-                <div className="container">
-                    <h2>Employees</h2>
-                    <table className="table table-hover table-striped table-border">
-                        <thead>
-                            <tr>
-                                <td className="td-brand">First Name</td>
-                                <td className="td-brand">Last Name</td>
-                                <td className="td-brand">Company ID</td>
-                                <td className="td-brand">Email</td>
-                                <td className="td-brand">Phone</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {view}
-                        </tbody>
-                    </table>
-                    <Link to='/employees/create' className="btn btn-outline-secondary mt-4">Create employee</Link>
-                </div>
-            </React.Fragment>
+            <div className="container">
+                <h2>Employees</h2>
+                <table className="table table-hover table-striped table-border">
+                    <thead>
+                        <tr>
+                            <td className="td-brand">First Name</td>
+                            <td className="td-brand">Last Name</td>
+                            <td className="td-brand">Company ID</td>
+                            <td className="td-brand">Email</td>
+                            <td className="td-brand">Phone</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {view}
+                    </tbody>
+                </table>
+                <Link to='/employees/create' className="btn btn-outline-secondary mt-4">Create employee</Link>
+            </div>
         )
     }
 }

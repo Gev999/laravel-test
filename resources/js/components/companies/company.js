@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Header from '../app-header';
 import ErrorBoundary from '../error-boundary';
 import { withApiService } from '../hoc-helpers';
 
@@ -29,7 +28,7 @@ class Company extends Component {
                     company: response,
                 })
             })
-            .catch(e=>{
+            .catch(e => {
                 this.setState({
                     error: e.response.data.error,
                 })
@@ -41,7 +40,7 @@ class Company extends Component {
         const imgSrc = company.logo ? company.logo : 'default.png'
         return (
             <tr>
-                <td><img src={`/storage/logos/${imgSrc}`} style={{width: '50px'}}/></td>
+                <td><img src={`/storage/logos/${imgSrc}`} style={{ width: '50px' }} /></td>
                 <td>{company.name}</td>
                 <td>{company.email}</td>
                 <td>{company.website}</td>
@@ -55,24 +54,21 @@ class Company extends Component {
         }
         const row = this.state.company ? this.getCompanyRow() : null;
         return (
-            <React.Fragment>
-                <Header />
-                <div className="container">
-                    <table className="table table-hover table-striped table-border">
-                        <thead>
-                            <tr>
-                                <td className="td-brand">Logo</td>
-                                <td className="td-brand">Name</td>
-                                <td className="td-brand">Email</td>
-                                <td className="td-brand">Website</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {row}
-                        </tbody>
-                    </table>
-                </div>
-            </React.Fragment>
+            <div className="container">
+                <table className="table table-hover table-striped table-border">
+                    <thead>
+                        <tr>
+                            <td className="td-brand">Logo</td>
+                            <td className="td-brand">Name</td>
+                            <td className="td-brand">Email</td>
+                            <td className="td-brand">Website</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {row}
+                    </tbody>
+                </table>
+            </div>
         )
     }
 }

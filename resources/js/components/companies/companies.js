@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { withApiService } from '../hoc-helpers';
-import Header from '../app-header';
 
 class Companies extends Component {
 
@@ -36,7 +35,7 @@ class Companies extends Component {
                 .then(res => {
                     this.getCompanies();
                 })
-                .catch(e=>{
+                .catch(e => {
                     console.log(e.response)
                 })
         }
@@ -52,7 +51,7 @@ class Companies extends Component {
             let imgSrc = company.logo ? company.logo : 'default.png'
             return (
                 <tr key={company.id}>
-                    <td><img src={`/storage/logos/${imgSrc}`} style={imgStyle}/></td>
+                    <td><img src={`/storage/logos/${imgSrc}`} style={imgStyle} /></td>
                     <td>{company.name}</td>
                     <td>{company.email}</td>
                     <td>{company.website}</td>
@@ -72,26 +71,23 @@ class Companies extends Component {
         const { companies } = this.state;
         const view = companies.length === 0 ? null : this.getCompaniesRows();
         return (
-            <React.Fragment>
-                <Header />
-                <div className="container">
-                    <h2>Companies</h2>
-                    <table className="table table-hover table-striped table-border">
-                        <thead>
-                            <tr>
-                                <td className="td-brand">Logo</td>
-                                <td className="td-brand">Name</td>
-                                <td className="td-brand">Email</td>
-                                <td className="td-brand">Website</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {view}
-                        </tbody>
-                    </table>
-                    <Link to='/companies/create' className="btn btn-outline-secondary mt-4">Create company</Link>
-                </div>
-            </React.Fragment>
+            <div className="container">
+                <h2>Companies</h2>
+                <table className="table table-hover table-striped table-border">
+                    <thead>
+                        <tr>
+                            <td className="td-brand">Logo</td>
+                            <td className="td-brand">Name</td>
+                            <td className="td-brand">Email</td>
+                            <td className="td-brand">Website</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {view}
+                    </tbody>
+                </table>
+                <Link to='/companies/create' className="btn btn-outline-secondary mt-4">Create company</Link>
+            </div>
         )
     }
 }

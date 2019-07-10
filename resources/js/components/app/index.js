@@ -1,8 +1,9 @@
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, withRouter } from 'react-router-dom';
 import { PrivateRoute } from '../hoc-helpers';
 import Login from '../login';
 import Home from '../home';
+import Header from '../app-header';
 import { Companies, Company, CompanyCreateOrEdit } from '../companies';
 import { Employees, Employee, EmployeeCreateOrEdit } from '../employess';
 import { ApiServiceProvider } from '../api-service-context';
@@ -11,7 +12,8 @@ import ApiService from '../../api-service';
 const App = () => {
     const apiService = new ApiService();
     return (
-        <ApiServiceProvider value = {apiService}>
+        <ApiServiceProvider value={apiService}>
+            {!!localStorage.getItem('token') && <Header />}
             <Switch>
                 <PrivateRoute exact path="/" component={Home} />
 
@@ -24,7 +26,7 @@ const App = () => {
                 <PrivateRoute exact path="/employees/:id(\d+)" component={Employee} />
                 <PrivateRoute exact path="/employees/create" component={EmployeeCreateOrEdit} />
                 <PrivateRoute exact path="/employees/:id(\d+)/edit" component={EmployeeCreateOrEdit} />
-                
+
                 <Route exact path="/login" component={Login} />
                 <Route render={() => <p>Page not found</p>} />
             </Switch>
@@ -32,4 +34,4 @@ const App = () => {
     )
 }
 
-export default App;
+export default withRouter(App);
